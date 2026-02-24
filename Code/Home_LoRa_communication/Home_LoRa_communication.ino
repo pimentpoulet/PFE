@@ -8,11 +8,11 @@
 #include <Arduino.h>
 
 // --- Config Wi-Fi ---
-const char* ssid = "TON_NOM_DE_RESEAU_WIFI";
-const char* password = "TON_MOT_DE_PASSE_WIFI";
+const char* ssid = "BELL256";
+const char* password = "83A1C779DF3";
 
 // Remplace par l'adresse IP locale de ton ordi (ex: 192.168.1.15)
-const char* serverName = "http://192.168.1.X:5000/api/data"; 
+const char* serverName = "http://192.168.2.141:5000/api/data";
 
 // --- LoRa config ---
 #define RF_FREQUENCY                  915000000 // Hz
