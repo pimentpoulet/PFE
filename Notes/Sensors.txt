@@ -1,0 +1,91 @@
+- AM2320: https://cdn-shop.adafruit.com/product-files/3721/AM2320.pdf
+
+%RH  -> resolution:    0.1%
+	accuracy:      \pm 3%
+	range:         0% to 99.9%
+	repeatability: \pm 0.1%
+	response time: <5s
+	drift:         <0.5%/yr
+
+Temperature   -> resolution:    0.1C / 16bit
+		accuracy:      \pm 0.5C
+		range: 	       -40C to +80C
+		repeaatbility: \pm 0.2C
+		response time: <5s
+		drift: 	       \pm 0.1C/yr
+
+DC   -> VCC:	      	 3.1V to 5.5V
+	dormancy TDP: 	 10µA
+	measure TDP:  	 950µA / 0.95mA
+	average TDP:  	 350µA / 0.35mA
+	sampling period: 2s
+
+
+- SHT85: https://sensirion.com/media/documents/4B40CEF3/640B2346/Sensirion_Humidity_Sensors_SHT85_Datasheet.pdf
+
+%RH  -> resolution:    0.01%
+	accuracy:      \pm 1.5%
+	range:         0% to 100%
+	repeatability: \pm 0.15%
+	response time: 8s
+	drift:         <0.25%/yr
+
+Temperature   -> resolution:    0.01C
+		accuracy:      \pm 0.1C
+		range: 	       -40C to +105C
+		repeaatbility: \pm 0.08C
+		response time: >2s
+		drift: 	       \pm 0.03C/yr
+
+DC   -> VCC / VDD:	 2.15V to 5.5V
+	dormancy TDP: 	 0.2µA
+	measure TDP:  	 600µA / 0.6mA
+	average TDP:  	 1.7µA (1 meas./s at lowest repeatability)
+	sampling period: 4.5ms
+
+
+- AHT20: https://www.espboards.dev/sensors/aht20/#specs
+
+
+%RH  -> resolution:    0.024%
+	accuracy:      \pm 2%
+	range:         0% to 100%
+	repeatability: \pm 0.1%
+	response time: 8s
+	drift:         <0.5%/yr
+
+Temperature   -> resolution:    0.01C
+		accuracy:      \pm 0.3C
+		range: 	       -40C to +85C
+		repeaatbility: \pm 0.1C
+		response time: 5s to 30s
+		drift: 	       <0.04C/yr
+
+DC   -> VCC / VDD:	 2V to 5.5V
+	dormancy TDP: 	 <0.25µA
+	measure TDP:  	 23µA
+	average TDP:  	 3.3mW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,3 @@
+ESP32-S2-DEVKITC-1-N8R2: https://www.digikey.ca/en/products/detail/espressif-systems/ESP32-S2-DEVKITC-1-N8R2/16688755
+
+ESP32-S3-DEVKITC-1-N8R8: https://www.digikey.ca/en/products/detail/espressif-systems/ESP32-S3-DEVKITC-1-N8R8/15295894
