@@ -26,11 +26,11 @@ def reception_donnees():
         print(" ------------------------------------------------ \n")
 
         # On renvoie un code 200 (OK) à l'ESP32 pour lui dire que c'est bien reçu
-        return jsonify({"statut": "succes", "message": "Donnees bien recues"}), 200
+        return jsonify({"status": "success", "message": "Data received"}), 200
         
     else:
         # S'il n'y a pas de JSON valide, on renvoie une erreur 400 (Bad Request)
-        return jsonify({"statut": "erreur", "message": "Aucune donnee JSON trouvee"}), 400
+        return jsonify({"status": "error", "message": "No data"}), 400
 
 if __name__ == '__main__':
     # host='0.0.0.0' est crucial : cela permet d'accepter les connexions 
