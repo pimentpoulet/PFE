@@ -15,19 +15,25 @@
         function updateDashboard() {
             // 1. Ask the server for the history data
             fetch('/api/history')
-                .then(response => response.json()) // 2. Convert it to a JS object
-                .then(data => {
-                    // 3. Find the index of the most recent reading (the last one in the list)
-                    let lastIndex = data.t.length - 1;
+                .then(response => response.json()) 
+                .then(jsonResponse => {
+                    // 2. Extract the actual array of readings from the new JSON format
+                    let readings = jsonResponse.data;
+                    
+                    // 3. Make sure we actually have data before trying to update
+                    if (readings.length > 0) {
+                        // 4. Find the most recent reading (the last object in the list)
+                        let lastIndex = readings.length - 1;
+                        let latestReading = readings[lastIndex];
 
-                    // 4. Update the temperature on the page
-                    document.getElementById("voltage-data").innerText = data.v[lastIndex];
-                    document.getElementById("temp-data").innerText = data.t[lastIndex];
-                    document.getElementById("hum-data").innerText = data.h[lastIndex];
-                    document.getElementById("co2-data").innerText = data.co2[lastIndex];
-
-                    // TODO: Update Voltage, Humidity, and CO2 here!
-                });
+                        // 5. Update the HTML using the database column names!
+                        document.getElementById("voltage-data").innerText = latestReading.voltage;
+                        document.getElementById("temp-data").innerText = latestReading.temperature;
+                        document.getElementById("hum-data").innerText = latestReading.humidity;
+                        document.getElementById("co2-data").innerText = latestReading.CO2;
+                    }
+                })
+                .catch(error => console.error("Error fetching data:", error));
         }
 
         // Run this function automatically every 5000 milliseconds (5 seconds)
