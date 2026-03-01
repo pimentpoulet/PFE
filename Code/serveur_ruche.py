@@ -6,6 +6,22 @@ from pathlib import Path
 from flask import Flask, request, jsonify, render_template
 
 
+def init_db():
+    with sqlite3.connect("beehive_db.db") as con:
+        cur = con.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS beehive (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                date TEXT,
+                time TEXT,
+                voltage REAL,
+                temperature REAL,
+                humidity REAL,
+                CO2 REAL
+            )
+        """)
+
+
 # Initialisation de l'application Flask
 app = Flask(__name__)
 
@@ -40,15 +56,9 @@ def reception_donnees():
         # connect to db
         try:
             con = sqlite3.connect(db_path)
+            cur = con.cursor()
         except sqlite3.Error as e:
             print(f"Error: {e}")
-
-        # create beehive table
-        try:
-            cur = con.cursor()
-            cur.execute("CREATE TABLE beehive(date, time, voltage, temperature, humidity, CO2)")
-        except sqlite3.OperationalError:
-            pass
 
         # add data to db
         date = datetime.now().strftime("%Y-%m-%d")
@@ -104,6 +114,5 @@ def display_dashboard():
 
 
 if __name__ == '__main__':
-    # host='0.0.0.0' est crucial : cela permet d'accepter les connexions 
-    # venant d'autres appareils sur ton réseau Wi-Fi local (comme ton ESP32).
+    init_db()
     app.run(host='0.0.0.0', port=5000, debug=True)
