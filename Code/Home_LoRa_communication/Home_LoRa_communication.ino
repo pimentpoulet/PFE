@@ -16,12 +16,12 @@ const char* serverName = "http://192.168.2.141:5000/api/data";
 
 // --- LoRa config ---
 #define RF_FREQUENCY                  915000000 // Hz
-#define TX_OUTPUT_POWER               14        
-#define LORA_BANDWIDTH                0         
-#define LORA_SPREADING_FACTOR         9         
-#define LORA_CODINGRATE               1         
-#define LORA_PREAMBLE_LENGTH          8         
-#define LORA_SYMBOL_TIMEOUT           0         
+#define TX_OUTPUT_POWER               14
+#define LORA_BANDWIDTH                0
+#define LORA_SPREADING_FACTOR         9
+#define LORA_CODINGRATE               1
+#define LORA_PREAMBLE_LENGTH          8
+#define LORA_SYMBOL_TIMEOUT           0
 #define LORA_FIX_LENGTH_PAYLOAD_ON    false
 #define LORA_IQ_INVERSION_ON          false
 
@@ -55,18 +55,31 @@ void setup() {
     RadioEvents.RxDone = OnRxDone;
     RadioEvents.RxTimeout = OnRxTimeout;
 
-    Mcu.begin();
+    // FIX 1: Ajout des arguments requis pour la V3
+    Mcu.begin(HELTEC_BOARD, SLOW_CLK_TPYE);
     pinMode(LED_PIN, OUTPUT);
 
     Radio.Init(&RadioEvents);
     Radio.SetChannel(RF_FREQUENCY);
-    Radio.SetRxConfig(
-        MODEM_LORA,TX_OUTPUT_POWER, 0, LORA_BANDWIDTH,
-        LORA_SPREADING_FACTOR, LORA_CODINGRATE,
-        LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
-        true, 0, 0, LORA_IQ_INVERSION_ON, 3000
-    );
     
+    // FIX 2: Configuration Rx avec les 14 arguments corrects (sans TX_OUTPUT_POWER)
+    Radio.SetRxConfig(
+        MODEM_LORA, 
+        LORA_BANDWIDTH, 
+        LORA_SPREADING_FACTOR,
+        LORA_CODINGRATE, 
+        0, // AFC bandwidth
+        LORA_PREAMBLE_LENGTH,
+        LORA_SYMBOL_TIMEOUT, 
+        LORA_FIX_LENGTH_PAYLOAD_ON,
+        0, // Payload length (0 = variable)
+        true, // CRC on
+        0, // Frequency hopping off
+        0, // Hop period
+        LORA_IQ_INVERSION_ON, 
+        true // RxContinuous
+    );
+
     Serial.println("LoRa en écoute...");
     Radio.Rx(0); // Écoute infinie
 }
@@ -82,18 +95,18 @@ void loop() {
             HTTPClient http;
             http.begin(serverName); // On pointe vers ton ordi
             http.addHeader("Content-Type", "application/json"); // On prévient que c'est du JSON
-            
+
             // Envoi de la requête POST
             int httpResponseCode = http.POST(jsonRecu);
-            
+
             Serial.print("Code de réponse HTTP : ");
             Serial.println(httpResponseCode);
-            
+
             http.end(); // Libère les ressources
         } else {
             Serial.println("Erreur: Wi-Fi déconnecté.");
         }
-        
+
         // On remet la radio en mode écoute
         Radio.Rx(0);
     }
@@ -102,16 +115,16 @@ void loop() {
 void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
     // Copie sécurisée du message
     memcpy(jsonRecu, payload, size);
-    jsonRecu[size] = '\0'; 
-    
+    jsonRecu[size] = '\0';
+
     Serial.print("Reçu par LoRa : ");
     Serial.println(jsonRecu);
-    
+
     // On lève le drapeau pour que le Wi-Fi fasse son travail dans le loop()
-    nouvelleDonnee = true; 
+    nouvelleDonnee = true;
 }
 
 void OnRxTimeout(void) {
     Serial.println("Erreur : Délai de réception dépassé (Timeout).");
-    Radio.Rx(0); 
+    Radio.Rx(0);
 }
