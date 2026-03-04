@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #1a252f;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { text-align: center; color: #f39c12; }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* 2x2 Grid Implementation */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            grid-template-rows: auto auto;    /* Two rows */
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chart-card {
+            background-color: #2c3e50;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid #34495e;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .btn-group button {
+            background-color: #34495e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .btn-group button.active, .btn-group button:hover {
+            background-color: #e67e22;
+        }
+
+        /* Responsive: stack on small screens */
+        @media (max-width: 800px) {
+            .chart-grid { grid-template-columns: 1fr; }
+            .stats-bar { flex-direction: column; align-items: center; gap: 10px; }
+        }
+    </style>
+    <title>Beehive Dashboard</title>
+</head>
+<body>
+
+    <h1>Beehive Dashboard</h1>
+
+    <div class="stats-bar">
+        <span>Voltage: <span id="voltage-data">--</span>V</span>
+        <span>Temp: <span id="temp-data">--</span>°C</span>
+        <span>Humidity: <span id="hum-data">--</span>%</span>
+        <span>CO2: <span id="co2-data">--</span>ppm</span>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="changeRange(10, this)">10m</button>
+        <button onclick="changeRange(60, this)">1h</button>
+        <button onclick="changeRange(1440, this)">24h</button>
+        <button onclick="changeRange('all', this)" class="active">All Time</button>
+    </div>
+
+    <div class="chart-grid">
+        <div class="chart-card"><canvas id="voltChart"></canvas></div>
+        <div class="chart-card"><canvas id="tempChart"></canvas></div>
+        <div class="chart-card"><canvas id="humChart"></canvas></div>
+        <div class="chart-card"><canvas id="co2Chart"></canvas></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let charts = {};
+
+        function createChart(id, label, color, unit) {
+            return new Chart(document.getElementById(id), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: label,
+                        data: [],
+                        borderColor: color,
+                        backgroundColor: color + '22',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#ecf0f1' } } },
+                    scales: {
+                        x: { ticks: { color: '#95a5a6' }, grid: { color: '#34495e' } },
+                        y: { 
+                            ticks: { color: '#95a5a6' }, 
+                            grid: { color: '#34495e' },
+                            title: { display: true, text: unit, color: '#bdc3c7' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initCharts() {
+            charts.volt = createChart('voltChart', 'Battery', '#f1c40f', 'V');
+            charts.temp = createChart('tempChart', 'Temperature', '#e67e22', '°C');
+            charts.hum = createChart('humChart', 'Humidity', '#3498db', '%');
+            charts.co2 = createChart('co2Chart', 'CO2 Level', '#2ecc71', 'ppm');
+        }
+
+        let currentRange = 'all';
+
+        function changeRange(range, btn) {
+            currentRange = range;
+            document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            fetch('/api/history')
+                .then(res => res.json())
+                .then(json => {
+                    const readings = json.data;
+                    if (!readings || readings.length === 0) return;
+
+                    const getJsDate = (r) => new Date(`${r.date}T${r.time}`);
+                    let filtered = (currentRange === 'all') 
+                        ? readings 
+                        : readings.filter(r => getJsDate(r) > new Date(Date.now() - currentRange * 60000));
+
+                    const labels = filtered.map(r => getJsDate(r).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+                    const sync = (chart, key) => {
+                        chart.data.labels = labels;
+                        chart.data.datasets[0].data = filtered.map(r => r[key]);
+                        chart.update('none');
+                    };
+
+                    sync(charts.volt, 'voltage');
+                    sync(charts.temp, 'temperature');
+                    sync(charts.hum, 'humidity');
+                    sync(charts.co2, 'CO2');
+
+                    const last = readings[readings.length - 1];
+                    document.getElementById("voltage-data").innerText = last.voltage;
+                    document.getElementById("temp-data").innerText = last.temperature;
+                    document.getElementById("hum-data").innerText = last.humidity;
+                    document.getElementById("co2-data").innerText = last.CO2;
+                });
+        }
+
+        initCharts();
+        updateDashboard();
+        setInterval(updateDashboard, 5000);
+    </script>
+</body>
+</html>
