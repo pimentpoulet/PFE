@@ -110,7 +110,7 @@ def get_history():
 
 @app.route('/')
 def display_dashboard():
-    return render_template('index.html')
+    return render_template('dashboard.html')
 
 
 if __name__ == '__main__':
