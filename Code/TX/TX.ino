@@ -20,8 +20,8 @@
 #define PIN_SDA          42
 #define SCD4x_ADDRESS    0x62    // Adresse I2C du SCD41
 
-// Temps de sommeil en secondes (12h = 43200 | Test = 10)
-#define SLEEP_TIME_SEC  10
+// Temps de sommeil en secondes (12h = 43200 | Test = 7)
+#define SLEEP_TIME_SEC  7
 
 /* --- Variables Globales --- */
 SensirionI2cScd4x sensor;
