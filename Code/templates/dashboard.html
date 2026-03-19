@@ -25,17 +25,17 @@
         /* 2x2 Grid Implementation */
         .chart-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            grid-template-rows: auto auto;    /* Two rows */
+            grid-template-columns: 1fr 1fr;    /* Two equal columns */
+            grid-template-rows: auto auto;     /* Two rows */
             gap: 20px;
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .chart-card {
             background-color: #2c3e50;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 40px;
+            border-radius: 24px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border: 1px solid #34495e;
         }
@@ -43,8 +43,8 @@
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
+            gap: 15px;
+            margin-bottom: 20px;
         }
         .btn-group button {
             background-color: #34495e;
@@ -52,15 +52,16 @@
             border: none;
             padding: 10px 20px;
             cursor: pointer;
-            border-radius: 20px;
+            border-radius: 15px;
             transition: 0.3s;
+            font-size: 16px;
         }
         .btn-group button.active, .btn-group button:hover {
             background-color: #e67e22;
         }
 
         /* Responsive: stack on small screens */
-        @media (max-width: 800px) {
+        @media (max-width: 1200px) {
             .chart-grid { grid-template-columns: 1fr; }
             .stats-bar { flex-direction: column; align-items: center; gap: 10px; }
         }
@@ -79,10 +80,11 @@
     </div>
 
     <div class="btn-group">
-        <button onclick="changeRange(10, this)">10m</button>
-        <button onclick="changeRange(60, this)">1h</button>
-        <button onclick="changeRange(1440, this)">24h</button>
-        <button onclick="changeRange('all', this)" class="active">All Time</button>
+        <button onclick="changeRange(1440, this)" class="active">24h</button>
+        <button onclick="changeRange(10080, this)">1w</button>
+        <button onclick="changeRange(40320, this)">4w</button>
+        <button onclick="changeRange('all', this)">All Time</button>
+        <button onclick="resetAllZooms()" style="background-color: #c0392b; margin-left: 20px;">Reset Zoom</button>
     </div>
 
     <div class="chart-grid">
@@ -93,6 +95,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <script>
         let charts = {};
 
@@ -114,11 +118,29 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: { legend: { labels: { color: '#ecf0f1' } } },
+                    plugins: {
+                        legend: { labels: { color: '#ecf0f1' } },
+                        // zoom zoom
+                        zoom: {
+                            pan: {
+                                enabled: true,
+                                mode: 'x'
+                            },
+                            zoom: {
+                                wheel: {
+                                    enabled: true
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'x'
+                            }
+                        }
+                    },
                     scales: {
                         x: { ticks: { color: '#95a5a6' }, grid: { color: '#34495e' } },
-                        y: { 
-                            ticks: { color: '#95a5a6' }, 
+                        y: {
+                            ticks: { color: '#95a5a6' },
                             grid: { color: '#34495e' },
                             title: { display: true, text: unit, color: '#bdc3c7' }
                         }
@@ -134,13 +156,20 @@
             charts.co2 = createChart('co2Chart', 'CO2 Level', '#2ecc71', 'ppm');
         }
 
-        let currentRange = 'all';
+        let currentRange = '720';
 
         function changeRange(range, btn) {
             currentRange = range;
             document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateDashboard();
+        }
+
+        function resetAllZooms() {
+            if (charts.volt) charts.volt.resetZoom();
+            if (charts.temp) charts.temp.resetZoom();
+            if (charts.hum) charts.hum.resetZoom();
+            if (charts.co2) charts.co2.resetZoom();
         }
 
         function updateDashboard() {
@@ -151,11 +180,33 @@
                     if (!readings || readings.length === 0) return;
 
                     const getJsDate = (r) => new Date(`${r.date}T${r.time}`);
-                    let filtered = (currentRange === 'all') 
-                        ? readings 
+                    let filtered = (currentRange === 'all')
+                        ? readings
                         : readings.filter(r => getJsDate(r) > new Date(Date.now() - currentRange * 60000));
 
-                    const labels = filtered.map(r => getJsDate(r).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    const MAX_POINTS = 100;
+                    if (filtered.length > MAX_POINTS) {
+                        const step = Math.ceil(filtered.length / MAX_POINTS);
+                        filtered = filtered.filter((_, index) => index % step === 0);
+                    }
+
+                    const labels = filtered.map(r => {
+                        const dateObj = getJsDate(r);
+
+                        // "24h"
+                        let options = { hour: '2-digit', minute: '2-digit' };
+
+                        // "all"
+                        if (currentRange === 'all') {
+                            options = { day: '2-digit', month: '2-digit' };
+                        }
+                        // "1w" | "4w"
+                        else if (currentRange === 10080 || currentRange === 40320) {
+                            options = { day: '2-digit', month: '2-digit', hour: '2-digit' };
+                        }
+
+                        return dateObj.toLocaleString([], options);
+                    });
 
                     const sync = (chart, key) => {
                         chart.data.labels = labels;
@@ -178,7 +229,7 @@
 
         initCharts();
         updateDashboard();
-        setInterval(updateDashboard, 5000);
+        setInterval(updateDashboard, 7000);
     </script>
 </body>
 </html>
