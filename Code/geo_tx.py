@@ -10,7 +10,9 @@ import serial
 import time
 
 def get_lat_lon(data):
-
+    """
+    gets the latitude and longitude from the GPS2IP Lite app
+    """
     data = data.split(',')
     if len(data) < 7 or not data[3] or not data[5]:
         return None, None
@@ -34,9 +36,8 @@ def get_lat_lon(data):
 
 def send_location(lat, lon, serial_port):
     """
-    gets the computer's geolocalisation and sends it
-    to a connected esp32 board so that it can be sent
-    via LoRa to the receiver module
+    sends localisation to a connected esp32 board so
+    that it can be sent via LoRa to the receiver module
     """
     message = f"LAT:{lat},LON:{lon}\n"
 
