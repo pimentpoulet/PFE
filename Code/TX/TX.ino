@@ -2,6 +2,7 @@
  * Heltec Wireless Stick Lite V3 - Émetteur LoRa + Capteur SCD41
  * -----------------------------------------------------------
  * Code optimisé 100% compatible avec heltec_unofficial.h
+ * Nécessite esp32 2.0.17 (by Espressif Systems)
  */
 
 #include <heltec_unofficial.h>

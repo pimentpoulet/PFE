@@ -11,7 +11,9 @@ import time
 
 def get_lat_lon(data):
 
-    data = list(data.split(','))
+    data = data.split(',')
+    if len(data) < 7 or not data[3] or not data[5]:
+        return None, None
 
     # latitude
     lat_data = data[3]
@@ -38,7 +40,7 @@ def send_location(lat, lon, serial_port):
     """
     message = f"LAT:{lat},LON:{lon}\n"
 
-    print(f"Envoi au Heltec : {message.strip()}")
+    print(f"\nEnvoi au Heltec : {message.strip()}")
     serial_port.write(message.encode('utf-8'))
     time.sleep(1)
 
@@ -69,7 +71,11 @@ try:
         data = sock.recv(1024).decode('utf-8')
         for line in data.split('\r\n'):
             if "$GPRMC" in line and ",A," in line:
-                lat, lon = get_lat_lon(line)
+                lat, lon = None, None
+                try:
+                    lat, lon = get_lat_lon(line)
+                except ValueError:
+                    pass
                 if lat is not None:
                     send_location(lat, lon, ser)
 except KeyboardInterrupt:

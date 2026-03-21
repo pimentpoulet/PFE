@@ -8,14 +8,24 @@ March 20th, 2026
 import serial
 import time
 
-home_lat, homee_lon = 46.80477, -71.234223
+home_lat, home_lon = 46.80477, -71.234223
+chris_lat, chris_lon = 36.175, -115.1372
 
-ser = serial.Serial('COM5', 115200, timeout=1)
+try:
+    ser = serial.Serial('COM6', 115200, timeout=1)
+    time.sleep(2)
+    print("Heltec connected.")
+except Exception as e:
+    print(f"Error: {e}")
+    exit()
 
 # check esp32 response
-time.sleep(2)
-while ser.in_waiting > 0:
-    reponse = ser.readline().decode('utf-8').strip()
-    print(f"Heltec feedback: {reponse}")
-
-ser.close()
+try:
+    while True:
+        reponse = ser.readline().decode('utf-8').strip()
+        print(f"Heltec feedback: {reponse}")
+except KeyboardInterrupt:
+    print("\nUser stop.")
+finally:
+    ser.close()
+    print("Heltec disconnected.")
