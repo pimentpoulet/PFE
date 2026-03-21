@@ -1,3 +1,10 @@
+"""
+sqlite3 package testing code
+
+Author: Clément Poulin
+February 28th, 2026
+"""
+
 import sqlite3
 import random
 

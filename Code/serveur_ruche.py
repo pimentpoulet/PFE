@@ -1,3 +1,10 @@
+"""
+Flask server host for the beehive dashboard
+
+Author: Clément Poulin
+February 24th, 2026
+"""
+
 import sqlite3
 import random
 

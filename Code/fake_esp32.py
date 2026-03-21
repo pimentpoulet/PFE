@@ -1,3 +1,10 @@
+"""
+Fake data emitter for the beehive server
+
+Author: Clément Poulin
+February 27th, 2026
+"""
+
 import requests
 import random
 import time
