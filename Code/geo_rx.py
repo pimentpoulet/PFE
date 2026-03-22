@@ -15,11 +15,12 @@ def extract_lat_lon(response):
     gets the latitude and longitude from the
     received LoRa transmission
     """
-    com_idx = response.find(',')
-    lat = response[4:com_idx]
-    lon = response[com_idx+5:]
-
-    return lat, lon
+    data = response.split(',')
+    if len(data) >= 2:
+        lat = data[0].replace("LAT:", "").strip()
+        lon = data[1].replace("LON:", "").strip()
+        return float(lat), float(lon)
+    return None, None
 
 
 def calculate_haversine_distance(lat1, lon1, lat2, lon2):
