@@ -1,3 +1,10 @@
+"""
+Flask server host for the beehive dashboard
+
+Author: Clément Poulin
+February 24th, 2026
+"""
+
 import sqlite3
 import random
 
@@ -115,4 +122,4 @@ def display_dashboard():
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)

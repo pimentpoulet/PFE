@@ -1,3 +1,10 @@
+"""
+sqlite3 package testing code
+
+Author: Clément Poulin
+February 28th, 2026
+"""
+
 import sqlite3
 import random
 
@@ -25,20 +32,4 @@ try:
 except sqlite3.OperationalError:
     pass
 
-if False:
-    # fill with fake testing data
-    for i in range(10):
-
-        fake_date = datetime.now().strftime("%Y-%m-%d")
-        fake_time = datetime.now().strftime("%H:%M:%S")
-        v = round(random.uniform(3.2, 4.2), 1)
-        t = round(random.uniform(20.0, 35.0), 1)
-        h = round(random.uniform(40.0, 60.0), 1)
-        c = round(random.randint(400, 2000))
-
-        cur.execute("INSERT INTO beehive VALUES (?, ?, ?, ?, ?, ?)", (fake_date, fake_time, v, t, h, c))
-
-    con.commit()
-
 print(cur.execute("SELECT temperature FROM beehive").fetchall())
-

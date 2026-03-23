@@ -1,100 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beehive Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Home Assistant Dark Theme Variables */
+            --primary-background-color: #111111;
+            --card-background-color: #1c1c1c;
+            --primary-text-color: #e1e1e1;
+            --secondary-text-color: #9e9e9e;
+            --primary-color: #03a9f4;
+            --accent-color: #ff9800;
+            --error-color: #f44336;
+            --ha-card-border-radius: 12px;
+            --ha-card-box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+            --divider-color: rgba(255, 255, 255, 0.12);
+        }
+
         body {
-            background-color: #1a252f;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-background-color);
+            color: var(--primary-text-color);
+            font-family: 'Roboto', sans-serif;
             padding: 20px;
             margin: 0;
+            -webkit-font-smoothing: antialiased;
         }
-        h1 { text-align: center; color: #f39c12; }
 
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 { 
+            text-align: left; 
+            color: var(--primary-text-color); 
+            font-weight: 500;
+            font-size: 24px;
+            margin-bottom: 24px;
+            padding-left: 10px;
+        }
+
+        /* Stats */
         .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background-color: var(--card-background-color);
+            border-radius: var(--ha-card-border-radius);
+            box-shadow: var(--ha-card-box-shadow);
+            padding: 20px;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 20px;
-            background: #2c3e50;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
+        }
+
+        .stat-name {
+            color: var(--secondary-text-color);
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: capitalize;
+        }
+
+        .stat-value-container {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--primary-text-color);
+        }
+
+        .stat-unit {
+            font-size: 16px;
+            color: var(--secondary-text-color);
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-left: 10px;
+        }
+
+        .btn-group button {
+            background-color: transparent;
+            color: var(--primary-text-color);
+            border: 1px solid var(--divider-color);
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 500;
+        }
+
+        .btn-group button:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-group button.active {
+            background-color: rgba(3, 169, 244, 0.15);
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-group button.reset-btn {
+            color: var(--error-color);
+            border-color: var(--divider-color);
+            margin-left: auto;
+        }
+        
+        .btn-group button.reset-btn:hover {
+            background-color: rgba(244, 67, 54, 0.15);
+            border-color: var(--error-color);
         }
 
         /* 2x2 Grid Implementation */
         .chart-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            grid-template-rows: auto auto;    /* Two rows */
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 16px;
         }
 
         .chart-card {
-            background-color: #2c3e50;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border: 1px solid #34495e;
+            background-color: var(--card-background-color);
+            padding: 16px;
+            border-radius: var(--ha-card-border-radius);
+            box-shadow: var(--ha-card-box-shadow);
+
+            position: relative; 
+            height: 400px;
+            width: 100%;
+            box-sizing: border-box; 
+        }
+        
+        /* Tablet / Small Desktop */
+        @media (max-width: 1200px) {
+            .chart-grid { 
+                grid-template-columns: 1fr;
+            }
+            .btn-group button.reset-btn { 
+                margin-left: 0; 
+            }
         }
 
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .btn-group button {
-            background-color: #34495e;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 20px;
-            transition: 0.3s;
-        }
-        .btn-group button.active, .btn-group button:hover {
-            background-color: #e67e22;
-        }
-
-        /* Responsive: stack on small screens */
-        @media (max-width: 800px) {
-            .chart-grid { grid-template-columns: 1fr; }
-            .stats-bar { flex-direction: column; align-items: center; gap: 10px; }
+        /* Phones */
+        @media (max-width: 768px) {
+            .chart-card {
+                height: 300px;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr 1fr; 
+            }
+            h1 {
+                font-size: 20px;
+            }
         }
     </style>
-    <title>Beehive Dashboard</title>
 </head>
 <body>
 
-    <h1>Beehive Dashboard</h1>
+    <div class="container">
+        <h1>Beehive Dashboard</h1>
 
-    <div class="stats-bar">
-        <span>Voltage: <span id="voltage-data">--</span>V</span>
-        <span>Temp: <span id="temp-data">--</span>°C</span>
-        <span>Humidity: <span id="hum-data">--</span>%</span>
-        <span>CO2: <span id="co2-data">--</span>ppm</span>
-    </div>
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-name">Battery Voltage</div>
+                <div class="stat-value-container">
+                    <span class="stat-value" id="voltage-data">--</span>
+                    <span class="stat-unit">V</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-name">Temperature</div>
+                <div class="stat-value-container">
+                    <span class="stat-value" id="temp-data">--</span>
+                    <span class="stat-unit">°C</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-name">Humidity</div>
+                <div class="stat-value-container">
+                    <span class="stat-value" id="hum-data">--</span>
+                    <span class="stat-unit">%</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-name">CO2 Level</div>
+                <div class="stat-value-container">
+                    <span class="stat-value" id="co2-data">--</span>
+                    <span class="stat-unit">ppm</span>
+                </div>
+            </div>
+        </div>
 
-    <div class="btn-group">
-        <button onclick="changeRange(10, this)">10m</button>
-        <button onclick="changeRange(60, this)">1h</button>
-        <button onclick="changeRange(1440, this)">24h</button>
-        <button onclick="changeRange('all', this)" class="active">All Time</button>
-    </div>
+        <div class="btn-group">
+            <button onclick="changeRange(1440, this)" class="active">24h</button>
+            <button onclick="changeRange(10080, this)">1w</button>
+            <button onclick="changeRange(40320, this)">4w</button>
+            <button onclick="changeRange('all', this)">All Time</button>
+            <button onclick="resetAllZooms()" class="reset-btn">Reset Zoom</button>
+        </div>
 
-    <div class="chart-grid">
-        <div class="chart-card"><canvas id="voltChart"></canvas></div>
-        <div class="chart-card"><canvas id="tempChart"></canvas></div>
-        <div class="chart-card"><canvas id="humChart"></canvas></div>
-        <div class="chart-card"><canvas id="co2Chart"></canvas></div>
+        <div class="chart-grid">
+            <div class="chart-card"><canvas id="voltChart"></canvas></div>
+            <div class="chart-card"><canvas id="tempChart"></canvas></div>
+            <div class="chart-card"><canvas id="humChart"></canvas></div>
+            <div class="chart-card"><canvas id="co2Chart"></canvas></div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <script>
         let charts = {};
+
+        // Material standard colors for charts
+        const gridColor = 'rgba(255, 255, 255, 0.05 )';
+        const tickColor = '#9e9e9e';
+        const legendColor = '#e1e1e1';
 
         function createChart(id, label, color, unit) {
             return new Chart(document.getElementById(id), {
@@ -105,22 +247,46 @@
                         label: label,
                         data: [],
                         borderColor: color,
-                        backgroundColor: color + '22',
+                        backgroundColor: color + '1A',
                         fill: true,
                         tension: 0.4,
-                        pointRadius: 2
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        pointHoverRadius: 4
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { labels: { color: '#ecf0f1' } } },
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: { 
+                            labels: { 
+                                color: legendColor,
+                                font: { family: "'Roboto', sans-serif" }
+                            } 
+                        },
+                        zoom: {
+                            pan: { enabled: true, mode: 'x' },
+                            zoom: {
+                                wheel: { enabled: true },
+                                pinch: { enabled: true },
+                                mode: 'x'
+                            }
+                        }
+                    },
                     scales: {
-                        x: { ticks: { color: '#95a5a6' }, grid: { color: '#34495e' } },
-                        y: { 
-                            ticks: { color: '#95a5a6' }, 
-                            grid: { color: '#34495e' },
-                            title: { display: true, text: unit, color: '#bdc3c7' }
+                        x: { 
+                            ticks: { color: tickColor, font: { family: "'Roboto', sans-serif" } }, 
+                            grid: { color: gridColor, drawBorder: false } 
+                        },
+                        y: {
+                            ticks: { color: tickColor, font: { family: "'Roboto', sans-serif" } },
+                            grid: { color: gridColor, drawBorder: false },
+                            title: { display: true, text: unit, color: tickColor, font: { family: "'Roboto', sans-serif" } }
                         }
                     }
                 }
@@ -128,19 +294,26 @@
         }
 
         function initCharts() {
-            charts.volt = createChart('voltChart', 'Battery', '#f1c40f', 'V');
-            charts.temp = createChart('tempChart', 'Temperature', '#e67e22', '°C');
-            charts.hum = createChart('humChart', 'Humidity', '#3498db', '%');
-            charts.co2 = createChart('co2Chart', 'CO2 Level', '#2ecc71', 'ppm');
+            charts.volt = createChart('voltChart', 'Battery', '#4caf50', 'V');         // Green
+            charts.temp = createChart('tempChart', 'Temperature', '#ff9800', '°C');    // Orange
+            charts.hum = createChart('humChart', 'Humidity', '#03a9f4', '%');          // Light Blue
+            charts.co2 = createChart('co2Chart', 'CO2 Level', '#9c27b0', 'ppm');       // Purple
         }
 
-        let currentRange = 'all';
+        let currentRange = '720';
 
         function changeRange(range, btn) {
             currentRange = range;
-            document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.btn-group button:not(.reset-btn)').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             updateDashboard();
+        }
+
+        function resetAllZooms() {
+            if (charts.volt) charts.volt.resetZoom();
+            if (charts.temp) charts.temp.resetZoom();
+            if (charts.hum) charts.hum.resetZoom();
+            if (charts.co2) charts.co2.resetZoom();
         }
 
         function updateDashboard() {
@@ -151,11 +324,33 @@
                     if (!readings || readings.length === 0) return;
 
                     const getJsDate = (r) => new Date(`${r.date}T${r.time}`);
-                    let filtered = (currentRange === 'all') 
-                        ? readings 
+                    let filtered = (currentRange === 'all')
+                        ? readings
                         : readings.filter(r => getJsDate(r) > new Date(Date.now() - currentRange * 60000));
 
-                    const labels = filtered.map(r => getJsDate(r).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                    const MAX_POINTS = 100;
+                    if (filtered.length > MAX_POINTS) {
+                        const step = Math.ceil(filtered.length / MAX_POINTS);
+                        filtered = filtered.filter((_, index) => index % step === 0);
+                    }
+
+                    const labels = filtered.map(r => {
+                        const dateObj = getJsDate(r);
+
+                        // "24h"
+                        let options = { hour: '2-digit', minute: '2-digit' };
+
+                        // "all"
+                        if (currentRange === 'all') {
+                            options = { day: '2-digit', month: '2-digit' };
+                        }
+                        // "1w" | "4w"
+                        else if (currentRange === 10080 || currentRange === 40320) {
+                            options = { day: '2-digit', month: '2-digit', hour: '2-digit' };
+                        }
+
+                        return dateObj.toLocaleString([], options);
+                    });
 
                     const sync = (chart, key) => {
                         chart.data.labels = labels;
@@ -178,7 +373,7 @@
 
         initCharts();
         updateDashboard();
-        setInterval(updateDashboard, 5000);
+        setInterval(updateDashboard, 7000);
     </script>
 </body>
 </html>
