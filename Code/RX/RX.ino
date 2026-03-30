@@ -75,7 +75,7 @@ void loop() {
 
         // send
         HTTPClient http;
-        http.begin("http://192.168.2.140:5000/api/data");      // computer
+        http.begin("http://192.168.2.200/api/data");      // RPI5
         http.addHeader("Content-Type", "application/json");    // content-type
 
         int httpResponseCode = http.POST(requestBody);
