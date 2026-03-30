@@ -2,6 +2,7 @@
  * Heltec Wireless Stick Lite V3 - Émetteur LoRa - Range test
  * -----------------------------------------------------------
  * Code optimisé 100% compatible avec heltec_unofficial.h
+ * requires esp32 boards manager -> version 2.0.17
  */
 
 #include <heltec_unofficial.h>
@@ -12,8 +13,8 @@
 /* --- Configuration LoRa --- */
 #define FREQUENCY           915.0    // MHz
 #define BANDWIDTH           125.0    // kHz
-#define SPREADING_FACTOR    9
-#define TRANSMIT_POWER      14       // dBm
+#define SPREADING_FACTOR    12
+#define TRANSMIT_POWER      21       // dBm
 
 float Lat = 0.0;
 float Lon = 0.0;
@@ -25,7 +26,7 @@ void setup() {
 
   // VEXT power on
   Serial.println("Activation de l'alimentation Vext...");
-  heltec_ve(true); 
+  heltec_ve(true);
   delay(1000);
   Serial.println("-> Vext active !");
 
@@ -56,16 +57,14 @@ void loop() {
         Serial.print(", ");
         Serial.println(Lon, 6);
 
-        // --- NOUVEAU : ENVOI LORA ---
-        // On prépare la chaîne de caractères à envoyer
-        char txPacket[64];
-        snprintf(txPacket, sizeof(txPacket), "LAT:%.6f,LON:%.6f", Lat, Lon);
+        // --- ENVOI LORA ---
 
-        Serial.print("Envoi LoRa en cours... ");
+        // 4 bytes each = 8 bytes total
+        float coords[2] = {Lat, Lon};
+
+        Serial.print("Envoi LoRa binaire... ");
         heltec_led(50);
-
-        // Transmission radio
-        int state = radio.transmit(txPacket);
+        int state = radio.transmit((uint8_t*)coords, 8);
         heltec_led(0);
 
         if (state == RADIOLIB_ERR_NONE) {
