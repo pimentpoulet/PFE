@@ -1,3 +1,4 @@
 hostname: serveur-ruche
+
 username: clement
-password: Star Wars2003
+password: ruches-p&p
