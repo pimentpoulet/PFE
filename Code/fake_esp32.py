@@ -11,7 +11,6 @@ import time
 
 
 # The URL of your Flask server
-# If running on the same computer, you can use localhost. 
 URL = "http://127.0.0.1:5000/api/data"
 
 print("Starting ESP32 Simulator... Press Ctrl+C to stop.")
