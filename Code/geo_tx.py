@@ -3,11 +3,13 @@ transmitter's geolocalisation code using the GPS2IP Lite app
 
 Author: Clément Poulin
 March 20th, 2026
+Last modified April 2th, 2026
 """
 
 import socket
 import serial
 import time
+
 
 def get_lat_lon(data):
     """
@@ -50,6 +52,8 @@ def send_location(lat, lon, serial_port):
         reponse = serial_port.readline().decode('utf-8').strip()
         print(f"Heltec feedback: {reponse}")
 
+    time.sleep(10)
+
 
 # Iphone data
 UDP_IP = "172.20.10.1"
@@ -77,6 +81,7 @@ try:
                     lat, lon = get_lat_lon(line)
                 except ValueError:
                     pass
+
                 if lat is not None:
                     send_location(lat, lon, ser)
 except KeyboardInterrupt:
