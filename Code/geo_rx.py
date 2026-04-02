@@ -9,6 +9,7 @@ import pandas as pd
 import serial
 import time
 import math
+import os
 
 
 def extract_lat_lon(response):
@@ -83,8 +84,12 @@ except Exception as e:
     exit()
 
 # check esp32 response
-df = pd.DataFrame(columns=['lat','lon','haversine distance'])
 current_rssi, current_snr = None, None
+
+cols = ['lat', 'lon', 'haversine distance', 'rssi', 'snr']
+df = pd.DataFrame(columns=cols)
+file_path = 'distance_data.csv'
+file_exists = os.path.isfile(file_path)
 
 try:
     while True:
@@ -104,8 +109,9 @@ try:
             if current_rssi is not None:
                 print(f"Signal: RSSI {current_rssi} dBm | SNR {current_snr} dB")
 
-            df.loc[len(df)] = [lat, lon, haversine_distance, current_rssi, current_snr]
-            df.to_csv('distance_data.csv')
+            new_data = pd.DataFrame([[lat, lon, haversine_distance, current_rssi, current_snr]], columns=cols)
+            new_data.to_csv(file_path, mode='a', index=False, header=not file_exists)
+            file_exists = True
 except KeyboardInterrupt:
     print("\nUser stop.")
 finally:
