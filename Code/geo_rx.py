@@ -5,6 +5,7 @@ Author: Clément Poulin
 March 20th, 2026
 """
 
+import pandas as pd
 import serial
 import time
 import math
@@ -58,12 +59,14 @@ except Exception as e:
     exit()
 
 # check esp32 response
+df = pd.DataFrame(columns=['lat','lon','haversine distance'])
 try:
     while True:
         response = ser.readline().decode('utf-8').strip()
         lat, lon = extract_lat_lon(response)
         if lat is not None and lon is not None:
             haversine_distance = calculate_haversine_distance(home_lat, home_lon, lat, lon)
+            df.loc[len(df)] = [lat, lon, haversine_distance]
             print(f"Heltec feedback: {response}")
             print(f"Distance between boards: {haversine_distance:.2f} km")
 except KeyboardInterrupt:
@@ -71,3 +74,6 @@ except KeyboardInterrupt:
 finally:
     ser.close()
     print("Heltec disconnected.")
+
+# write data to csv
+df.to_csv('distance_data.csv')
