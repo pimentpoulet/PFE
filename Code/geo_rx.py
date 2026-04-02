@@ -5,6 +5,7 @@ Author: Clément Poulin
 March 20th, 2026
 """
 
+import pandas as pd
 import serial
 import time
 import math
@@ -25,6 +26,30 @@ def extract_lat_lon(response):
                 return lat, lon
             except ValueError:
                 return None, None
+    return None, None
+
+
+def extract_RSSI_SNR(response):
+    """
+    Extracts RSSI and SNR from the Arduino DEBUG line:
+    "DEBUG: RSSI: -105.00 dBm | SNR: -12.50 dB"
+    """
+    if "DEBUG:" in response:
+        try:
+            # Split the line by the pipe character
+            parts = response.split('|')
+            
+            # Extract RSSI: find string between 'RSSI:' and 'dBm'
+            rssi_part = parts[0].split('RSSI:')[1].split('dBm')[0].strip()
+            rssi = float(rssi_part)
+            
+            # Extract SNR: find string between 'SNR:' and 'dB'
+            snr_part = parts[1].split('SNR:')[1].split('dB')[0].strip()
+            snr = float(snr_part)
+            
+            return rssi, snr
+        except (IndexError, ValueError):
+            return None, None
     return None, None
 
 
@@ -58,14 +83,29 @@ except Exception as e:
     exit()
 
 # check esp32 response
+df = pd.DataFrame(columns=['lat','lon','haversine distance'])
+current_rssi, current_snr = None, None
+
 try:
     while True:
-        response = ser.readline().decode('utf-8').strip()
+        response = ser.readline().decode('utf-8', errors='ignore').strip()
+        if not response:
+            continue
         lat, lon = extract_lat_lon(response)
+        rssi, snr = extract_RSSI_SNR(response)
+        if rssi is not None:
+            current_rssi, current_snr = rssi, snr
         if lat is not None and lon is not None:
             haversine_distance = calculate_haversine_distance(home_lat, home_lon, lat, lon)
-            print(f"Heltec feedback: {response}")
-            print(f"Distance between boards: {haversine_distance:.2f} km")
+
+            print("-" * 30)
+            print(f"Location: {lat}, {lon}")
+            print(f"Distance: {haversine_distance:.2f} km")
+            if current_rssi is not None:
+                print(f"Signal: RSSI {current_rssi} dBm | SNR {current_snr} dB")
+
+            df.loc[len(df)] = [lat, lon, haversine_distance, current_rssi, current_snr]
+            df.to_csv('distance_data.csv')
 except KeyboardInterrupt:
     print("\nUser stop.")
 finally:
