@@ -9,6 +9,8 @@ Last modified April 2th, 2026
 import socket
 import serial
 import time
+import pandas as pd
+import os
 
 
 def get_lat_lon(data):
@@ -52,7 +54,7 @@ def send_location(lat, lon, serial_port):
         reponse = serial_port.readline().decode('utf-8').strip()
         print(f"Heltec feedback: {reponse}")
 
-    time.sleep(10)
+    time.sleep(2)
 
 
 # Iphone data
@@ -66,6 +68,11 @@ try:
 except Exception as e:
     print(f"Error: {e}")
     exit()
+
+cols = ['lat', 'lon']
+df = pd.DataFrame(columns=cols)
+file_path = '2026_03_04_distance_home_ulaval.csv'
+file_exists = os.path.isfile(file_path)
 
 # Iphone connection
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -82,8 +89,13 @@ try:
                 except ValueError:
                     pass
 
+                print(lat, lon)
+                new_data = pd.DataFrame([[lat, lon]], columns=cols)
+                new_data.to_csv(file_path, mode='a', index=False, header=not file_exists)
+                file_exists = True
                 if lat is not None:
                     send_location(lat, lon, ser)
+
 except KeyboardInterrupt:
     print("\nUser stop.")
 finally:
