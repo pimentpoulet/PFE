@@ -1,50 +1,92 @@
 import pandas as pd
 import folium
+import branca.colormap as cm
+import os
+
+import warnings
+warnings.filterwarnings("ignore", message=".*The global interpreter lock.*")
 
 
-# 1. Charger les données du fichier CSV 
-# Assurez-vous que le fichier 'distance_tests.csv' est dans le même dossier
-df = pd.read_csv('distance_tests.csv')
+# Fonction pour déterminer la couleur en fonction du RSSI
+def get_color(rssi):
+    # Les valeurs LoRa vont généralement de -40 (excellent) à -130 (très faible)
+    if rssi >= -80:
+        return 'green'       # Excellent signal
+    elif rssi >= -105:
+        return 'orange'      # Signal moyen
+    elif rssi >= -120:
+        return 'red'         # Signal faible
+    else:
+        return 'darkred'     # Signal à la limite de la perte
 
-# 2. Nettoyer les doublons pour un tracé fluide
-# Le fichier contient des points répétés 
-path_data = df[['lat', 'lon']].drop_duplicates().values.tolist()
 
-# 3. Créer la carte centrée sur le point moyen du parcours
-map_center = [df['lat'].mean(), df['lon'].mean()]
-m = folium.Map(location=map_center, zoom_start=18, tiles='OpenStreetMap')
+file_path = r"distance_data\2026_03_04_distance_data_2.csv"
 
-# 4. Ajouter le tracé (Polyline)
-folium.PolyLine(
-    path_data, 
-    color="blue", 
-    weight=5, 
-    opacity=0.7,
-    tooltip="Mon Parcours"
-).add_to(m)
+try:
+    df = pd.read_csv(file_path)
+except FileNotFoundError:
+    print(f"Le fichier {file_path} est introuvable.")
+    exit()
 
-# 5. Ajouter des marqueurs distinctifs pour le départ et l'arrivée
-folium.Marker(
-    location=path_data[0], 
-    popup="Départ", 
-    icon=folium.Icon(color='green', icon='play')
-).add_to(m)
+# Retirer les lignes où il n'y a pas de coordonnées GPS valides
+df = df.dropna(subset=['lat', 'lon'])
 
-folium.Marker(
-    location=path_data[-1], 
-    popup="Arrivée", 
-    icon=folium.Icon(color='red', icon='stop')
-).add_to(m)
+# 2. Déterminer le centre de la carte (moyenne des coordonnées)
+if not df.empty:
+    center_lat = df['lat'].mean()
+    center_lon = df['lon'].mean()
+else:
+    print("Le fichier CSV ne contient aucune coordonnée valide.")
+    exit()
 
-# 6. Ajouter un marqueur pour votre point de référence spécifique
-ref_point = [46.80477, -71.234223]
-folium.Marker(
-    location=ref_point,
-    popup="Point de référence",
-    icon=folium.Icon(color='purple', icon='info-sign')
-).add_to(m)
+# Créer la carte de base
+m = folium.Map(location=[center_lat, center_lon],
+               zoom_start=20,
+               tiles='cartodbpositron')
 
-# 7. Sauvegarder la carte
-m.save('ma_carte_quebec.html')
+# 1. Créer le gradient de couleurs (Rouge = -150, Jaune = -75, Vert = 0)
+colormap = cm.LinearColormap(
+    colors=['red', 'purple', 'blue'],
+    vmin=-150,
+    vmax=0
+)
+colormap.caption = 'Force du signal LoRa (RSSI en dBm)'
 
-print("La carte a été générée avec succès : ouvrez 'ma_carte_quebec.html' dans votre navigateur.")
+# 2. Boucle pour ajouter les points
+for idx, row in df.iterrows():
+    lat, lon = row['lat'], row['lon']
+    rssi, snr = row['rssi'], row['snr']
+
+    if pd.isna(rssi):
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=3,
+            color='gray',
+            fill=True,
+            fill_color='gray',
+            fill_opacity=0.6,
+            popup="Aucun signal"
+        ).add_to(m)
+    else:
+        # Obtenir la couleur directement via le colormap
+        color = colormap(rssi) 
+
+        folium.CircleMarker(
+            location=[lat, lon],
+            radius=6,
+            color=color,
+            fill=True,
+            fill_color=color,
+            fill_opacity=0.9,
+            popup=f"RSSI: {rssi} dBm<br>SNR: {snr} dB"
+        ).add_to(m)
+
+# 3. Ajouter la légende visuelle dans le coin de la carte
+colormap.add_to(m)
+
+output_folder = "maps"
+os.makedirs(output_folder, exist_ok=True)
+base_name = os.path.splitext(os.path.basename(file_path))[0]
+
+output_file = os.path.join(output_folder, f"{base_name}.html")
+m.save(output_file)
