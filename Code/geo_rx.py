@@ -16,7 +16,9 @@ import threading
 
 
 def get_lat_lon(data):
-    """gets the latitude and longitude from the GPS2IP Lite app"""
+    """
+    gets the latitude and longitude from the GPS2IP Lite app
+    """
     data = data.split(',')
     if len(data) < 7 or not data[3] or not data[5]:
         return None, None
@@ -36,7 +38,9 @@ def get_lat_lon(data):
 
 
 def extract_RSSI_SNR(response):
-    """Extracts RSSI and SNR from the Arduino DEBUG line"""
+    """
+    Extracts RSSI and SNR from the Arduino DEBUG line
+    """
     if "DEBUG:" in response:
         try:
             parts = response.split('|')
@@ -57,7 +61,9 @@ current_snr = None
 
 
 def read_serial_data(ser):
-    """Tâche de fond pour lire les données LoRa entrantes en continu"""
+    """
+    Tâche de fond pour lire les données LoRa entrantes en continu
+    """
     global current_rssi, current_snr
     while True:
         try:
@@ -91,9 +97,10 @@ except Exception as e:
     print(f"Error: {e}")
     exit()
 
-cols = ['lat', 'lon', 'rssi', 'snr']
-file_path = '2026_04_04_distance_test_3.csv'
+
+file_path = 'distance_data/2026_04_04_distance_test_3.csv'
 file_exists = os.path.isfile(file_path)
+cols = ['lat', 'lon', 'rssi', 'snr']
 
 # Connexion Iphone
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

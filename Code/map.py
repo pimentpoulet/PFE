@@ -20,7 +20,7 @@ def get_color(rssi):
         return 'darkred'     # Signal à la limite de la perte
 
 
-file_path = r"distance_data\2026_03_04_distance_data_2.csv"
+file_path = r"distance_data\2026_04_04_distance_test_3.csv"
 
 try:
     df = pd.read_csv(file_path)
