@@ -40,8 +40,10 @@ void loop() {
     int state = radio.readData(receivedData);
 
     if (state == RADIOLIB_ERR_NONE) {
+      heltec_led(50);
       // Impression dans le format attendu par Python
       Serial.printf("DEBUG: RSSI: %.2f dBm | SNR: %.2f dB\n", radio.getRSSI(), radio.getSNR());
+      heltec_led(0);
     }
 
     // On relance l'écoute
