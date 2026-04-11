@@ -1,19 +1,17 @@
 connecteur 1.25mm: https://www.amazon.ca/FainWan-paires-connecteurs-broches-femelle/dp/B09PN4149L/ref=sr_1_5_sspa?__mk_fr_CA=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3XKI8ZM82DEO&dib=eyJ2IjoiMSJ9.NfGL0Waz3Hzly3YKHOmkzVqiEWiGj5spMt72aLWdFZvrSZcrR9Kz_GTny5m4jAg6p6kXfDty7MqQr-navJuFgbUWgI44Sd5vaoBT9FbswkhiLuWv5ys28usFIX7AFvnDUsJ_XjP60Z9Yvi3cH_1nqo6tMI3WEkmBjgQgC6dmCIkLrOZSsAg1qJx2368JrKITxIe8Lhusy-pCBZNiqFQqEA69VX76E2eXH1hP5qvtsp6rnWx4QaThybmA90tKaWzNs0exXpiKxVCRTmU7c-PsDqIz3vftCmulylJW7QynCfs.-qaTzpYqlYZCX68yWv3XRkJhzMb7S4e-XyDWB2Vghws&dib_tag=se&keywords=jst+ph+1.25+connector&qid=1775760729&sprefix=jst+ph+1+25+connector%2Caps%2C83&sr=8-5-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1
 
-
 connecteur 2.0mm: https://www.amazon.ca/-/fr/ensembles-connecteurs-femelle-appareils-m%C3%A9nagers/dp/B0F36N258J/ref=sr_1_7?dib=eyJ2IjoiMSJ9.Pq-VmlCXx_QV8Z7k-dXI5AdXZbB1wFrkxZMpT8q3nKRWt3wiNVMIIJgmQV1Xa0git8Na8W8ce2wurKNkLaNBolpb_akGvKellbfd1_VecesbjFQ7Fb1GCPoXl63gNs4gvlbY7oSwc3LNvQOInhnT6PCZW-LtWDwP41BUEvKRa1P7PWt_XhcJprDloRoJp5Vj9yyRX2GMWt06veOhN4HdgSLhfZ-1-j4MTqn2j_ruIBx28n59AxZwWzj2qWaP7X29MgDmXFnzRGNdurSQmEfTnxxe4ydmherVmcTZclzMjsM._Xlz3z9BzEe5fkVYvzdND0-tAgQbxIh7299ic2D5N1Q&dib_tag=se&gad_source=1&hvadid=588679738288&hvdev=c&hvexpln=0&hvlocphy=9000264&hvnetw=g&hvocijid=12023687485271178287--&hvqmt=b&hvrand=12023687485271178287&hvtargid=kwd-301899363509&hydadcr=28050_14530846&keywords=jst%2Bph%2B2.0%2Bconnector&mcid=226855df29df38fdb4b1d10a9508433d&qid=1775760603&sr=8-7&th=1
-
-
-batterie 18650: https://www.flashlightworld.ca/products/nitecore-nl1834-18650-3400mah-3-7v-protected-lithium-ion-li-ion-button-top-battery
-
 
 CN3791: https://www.amazon.ca/contr%C3%B4le-batterie-panneau-solaire-lithium/dp/B0D2KM7Q4K/ref=sr_1_3_sspa?__mk_fr_CA=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1X5X5301QBLJU&dib=eyJ2IjoiMSJ9.CcXan6e0rUfoz0ESDuiTrD6Mn7W2CdQ6G-34aS4D_Be8C0TRduKzJ_KF87k9ZpoxmzKVGW9I9C3Xu8ppw9fCXHrxerzRfJ8iP24l11Axxka6npiP-s10Kjw9R_Mr7s9jqWwRRMMBBDI-O-2NVuvCpGKGmwCdI-ipeJdlPh89aPk7vdcPZpZ8Pgyq4reZKr57-Vxi58vGpKcCIlik-8QosLCROUNqLTvnkj5djEQg18gJ4LDBVfMcFofpExfj-XyVCZhoA5yRH8qzZUBeQhzTn7xWjiGe9uKySGAn1GqUfkw.s8Do2bL7bLwIKHnO_FCresvtz7w6XDv9m52UBl_UfiM&dib_tag=se&keywords=CN3791&qid=1775759117&sprefix=cn379%2Caps%2C153&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1
 
-
-panneau solaire: https://www.adafruit.com/product/5366
-
-
 boitier du système: https://www.amazon.ca/dp/B0BP7C5JDC/ref=sspa_dk_detail_3?pd_rd_i=B0BP7C5JDC&pd_rd_w=MWVCd&content-id=amzn1.sym.516c2169-755e-413a-a38a-68230f4ab66f&pf_rd_p=516c2169-755e-413a-a38a-68230f4ab66f&pf_rd_r=TPPF99NX9Z7H9E5K2HRT&pd_rd_wg=fKmDX&pd_rd_r=56d9ca9b-7758-4e9c-8e4b-34bb4ccca77c&sp_csd=d2lkZ2V0TmFtZT1zcF9kZXRhaWw&th=1
 
+boitier de la batterie: https://www.amazon.ca/-/fr/ECSiNG-supports-batterie-Cell-21700/dp/B0FMGNW4WL/ref=sr_1_11?__mk_fr_CA=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=1XENWW8SD0OKK&dib=eyJ2IjoiMSJ9.3tXt0-bBOPTaiPhNf7vOJsbsE_gJp98dBhjWsiYP_hMVgpqhI5I7_BK-1iSReR2PK3y5fzTHpO6I_uUO2y7KnJN7ndlVct1oK8y8EBlwkyKnvJph0_LbJ2lTK4K47-I704fjNuYo0a3-WSD6-456dOL3JGa_HUld0WxFizRPyDZmyedFnPdq-Hb8Ea9U9IncY7szsxtunTrXNln0Ezda3FI9Na--_2-QzN15KBajE3RpCQM3EXlhG37fqK5zi46NlDoIscrYN53P8Wjsl0_B9TJIMVRqGFufCjkHMsHm3AI.YnseTXGlmvRCgIFKvzwVioJhPDmt1geNK50tKyhncJo&dib_tag=se&keywords=21700+battery+holder&qid=1775840460&sprefix=21700+battery+holde%2Caps%2C92&sr=8-11
 
-boitier de la batterie: https://www.amazon.ca/dp/B07T5SV3PD/ref=sspa_dk_detail_2?pd_rd_i=B07T5SV3PD&pd_rd_w=snI9y&content-id=amzn1.sym.516c2169-755e-413a-a38a-68230f4ab66f&pf_rd_p=516c2169-755e-413a-a38a-68230f4ab66f&pf_rd_r=HKS3Z1E26QY38CTY696X&pd_rd_wg=JU4Qx&pd_rd_r=926c31f8-5c45-4a83-ab42-c29073eeadbf&sp_csd=d2lkZ2V0TmFtZT1zcF9kZXRhaWw&th=1 
+
+
+Ailleurs :
+
+batterie 18650: https://www.flashlightworld.ca/products/nitecore-nl1834-18650-3400mah-3-7v-protected-lithium-ion-li-ion-button-top-battery
+
+panneau solaire: https://www.adafruit.com/product/5366
