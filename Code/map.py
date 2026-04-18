@@ -10,7 +10,7 @@ from bokeh.palettes import Turbo256
 
 api_key = os.environ.get('GOOGLE_API_KEY', 'AIzaSyBwRAE0FlF4FgbcsTdE9GmQgUM6-7Y76bk')
 
-file_path = r"distance_data\2026_04_04_distance_test_3.csv"
+file_path = r"distance_data\2026_04_17_distance_test_ile.csv"
 try:
     df = pd.read_csv(file_path)
 except FileNotFoundError:
@@ -53,10 +53,10 @@ map_styles = """
 ]
 """
 gmap_options = GMapOptions(
-    lat=center_lat, 
-    lng=center_lon, 
-    map_type="roadmap", 
-    zoom=19,
+    lat=center_lat,
+    lng=center_lon,
+    map_type="satellite",
+    zoom=18,
     styles=map_styles
 )
 p = gmap(api_key, gmap_options, title="Test de portée LoRa - Projet Ruche", sizing_mode="stretch_both")
