@@ -98,7 +98,7 @@ except Exception as e:
     exit()
 
 
-file_path = 'distance_data/2026_04_04_distance_test_3.csv'
+file_path = '2026_04_17_distance_test_ile.csv'
 file_exists = os.path.isfile(file_path)
 cols = ['lat', 'lon', 'rssi', 'snr']
 
