@@ -2,3 +2,6 @@ hostname: serveur-ruche
 
 username: clement
 password: ruches-p&p
+
+mosquitto-sender: esp32-RX
+passwd: 	  esp32-passwd
