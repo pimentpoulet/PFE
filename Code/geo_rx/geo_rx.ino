@@ -25,6 +25,7 @@ void setup() {
   RADIOLIB_OR_HALT(radio.setFrequency(FREQUENCY));
   RADIOLIB_OR_HALT(radio.setBandwidth(BANDWIDTH));
   RADIOLIB_OR_HALT(radio.setSpreadingFactor(SPREADING_FACTOR));
+  RADIOLIB_OR_HALT(radio.setCodingRate(8));
 
   // Début de l'écoute continue
   RADIOLIB_OR_HALT(radio.startReceive(RADIOLIB_SX126X_RX_TIMEOUT_INF));

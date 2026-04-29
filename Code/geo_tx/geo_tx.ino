@@ -21,6 +21,7 @@ void setup() {
   radio.setBandwidth(BANDWIDTH);
   radio.setSpreadingFactor(SPREADING_FACTOR);
   radio.setOutputPower(TRANSMIT_POWER);
+  radio.setCodingRate(8);
 
   Serial.println("Base prête : Envoi d'un ping constant.");
 }
