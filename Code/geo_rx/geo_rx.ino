@@ -9,7 +9,7 @@
 
 #define FREQUENCY 915.0
 #define BANDWIDTH 125.0
-#define SPREADING_FACTOR 12
+#define SPREADING_FACTOR 7
 
 volatile bool rxFlag = false;
 
