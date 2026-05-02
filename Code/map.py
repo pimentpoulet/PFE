@@ -10,7 +10,7 @@ from bokeh.palettes import Turbo256
 
 api_key = os.environ.get('GOOGLE_API_KEY', 'AIzaSyBwRAE0FlF4FgbcsTdE9GmQgUM6-7Y76bk')
 
-file_path = r"distance_data\2026_04_17_distance_test_ile.csv"
+file_path = r"distance_data\SF\2026_04_17_distance_test_ile.csv"
 try:
     df = pd.read_csv(file_path)
 except FileNotFoundError:
